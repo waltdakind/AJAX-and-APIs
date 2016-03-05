@@ -9,3 +9,7 @@ body {
 	border-color: teal;
 	border-style: solid 2px;
 }
+.btn {
+ 		padding: 3px, 3px, 3px, 3px;
+ 		  margin: 10px;
+}

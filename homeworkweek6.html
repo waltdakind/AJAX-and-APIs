@@ -3,33 +3,40 @@
 	<title>Animals</title>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-<link rel="stylesheet" href="assets/styles/reset.css">
-<link rel="stylesheet" href="assets/styles/style.css">
+<link rel="stylesheet" href="assets/style/reset.css">
+<link rel="stylesheet" href="assets/style/style.css">
 </head>
 
 <body>
 
 <div class="container pull-right">
-  <h1>animals!</h1>
-
+<div class = "btn-toolbar">
   <div id="animalsView">
-
+ </div>
   </div>
-
-  <form class = "pull right" id="animal-form">
-    <label form="animal-input">Add a animal</label>
+<br><br><br><br><br><br>
+  <form class = "pull-right" id="animal-form">
+    <label form="animal-input">Add a animal</label> <br>
     <input type="text" id="animal-input"><br>
    
-    <input id="addanimal" type="submit" value="Add a animal">
+    <input id="addanimal" class = "btn btn-primary" type="submit" value="Add a animal">
   </form>
+<div class="container">
+
+    <p class id = 'rating'>
+	<p class id = 'searchResult'> 
+	<p class id = 'movingImage'>
+
+
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script type="text/javascript">
 	var animals = [];
 
 	for (var i = 0; i < animals.length; i++){
-	    var a = $('<button>')
-	    a.addClass('animal');
+	    var a = $("<button>")
+	    a.addClass('animal btn btn-primary');
 	    a.attr('data-name', animals[i]);
 	    a.text(animals[i]);
 	    $('#animalsView').append(a);
@@ -38,20 +45,78 @@
 	$('#addanimal').on('click', function(){
 
 		var newanimal = $('#animal-input').val().trim();
+		var gKey = "&api_key=dc6zaTOxFJmzC"
+		var gLimit = '&limit=10';
+		var giphyURL = "http://api.giphy.com/v1/gifs/search?q=";
+		giphySearch = giphyURL + newanimal + gKey + gLimit;
 
 		// Creating a button and putting into a variable
 		var a = $('<button>')
 
 		// Giving attributes to the button created
-	    a.addClass('animal');
+	    a.addClass('animal btn btn-primary');
+
+
 	    a.attr('data-name', newanimal);
 	    a.text(newanimal);
 
 	    // Changing the html adding the button
+	    	
+	 
 	    $('#animalsView').append(a);
 
+
+
 	    // Clearing out the text-box 
-	    $('#animal-input').val('');  
+	 //   $('#animal-input').val('');  
+
+	    //call api search on click
+  
+	    // http://api.giphy.com/v1/gifs/search?q=' + newanimal + '&api_key=dc6zaTOxFJmzC'
+        //On click event issue ajax command
+       $.get( giphySearch, function( response ) {
+       	//the console log below displays the url to the first image in the array (if uncommented)
+       	
+       	//console.log(response.data[0].images.fixed_height_downsampled.url); 
+  		
+  		var arrayOfTenImages = response.data;
+  		
+  		console.log(arrayOfTenImages); 
+
+		for(var i = 0; i<arrayOfTenImages.length; i++) {
+  		var stillImageURL = arrayOfTenImages[i].images.fixed_height_still.url;
+  		var movingImageURL = arrayOfTenImages[i].images.fixed_height_downsampled.url;
+  		var rating = arrayOfTenImages[i].rating;
+  	//	console.log(stillImageURL);
+  	//	console.log(rating);
+  		var imageHTML = '<img src=\"' + stillImageURL + '\">';
+  	//	console.log(imageHTML);
+  	//	$(#searchResult).append(imageHTML);
+  
+   $('#searchResult').append('<p> Rating:' +  rating +' </p> <p>' + imageHTML + '</p>');
+  console.log(movingImageURL);   
+   $(this).attr('data-info', movingImageURL);
+
+  // .attr('data-info', movingImageURL)
+   //assign data name url to movingImage 
+   //$('#movingImage').append('Rating:' +  rating +' </p>');
+   //$('#searchResult').append(imageHTML);
+ 
+
+
+
+		};
+  $('img').click(function() {
+ //click handler for img 
+$(this).jQuery.data( 'data-info', movingImageURL);
+console.log(clickView);
+
+//replace image with movingImage
+//on click revert to still
+
+
+});
+		});
 
 		//------ 
 		
