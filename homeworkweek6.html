@@ -56,23 +56,19 @@
 		// Giving attributes to the button created
 	    a.addClass('animal btn btn-primary');
 
+	    a.data('data-name', newanimal);
 
-	    a.attr('data-name', newanimal);
 	    a.text(newanimal);
 
-	    // Changing the html adding the button
-	    	
-	 
+	    // Changing the html adding the button	 
+
 	    $('#animalsView').append(a);
 
 
 
 	    // Clearing out the text-box 
-	 //   $('#animal-input').val('');  
+	     $('#animal-input').val('');  
 
-	    //call api search on click
-  
-	    // http://api.giphy.com/v1/gifs/search?q=' + newanimal + '&api_key=dc6zaTOxFJmzC'
         //On click event issue ajax command
        $.get( giphySearch, function( response ) {
        	//the console log below displays the url to the first image in the array (if uncommented)
@@ -108,6 +104,17 @@
 		};
   $('img').click(function() {
  //click handler for img 
+$(this).jQuery.data( 'data-info', movingImageURL);
+console.log(clickView);
+
+//replace image with movingImage
+//on click revert to still
+
+
+});
+
+  $("<button>").click(function() {
+ //click handler for button
 $(this).jQuery.data( 'data-info', movingImageURL);
 console.log(clickView);
 
