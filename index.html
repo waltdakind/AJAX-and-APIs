@@ -1,34 +1,120 @@
-<!DOCTYPE html>
-<html lang="">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Giphy API AJAX Buttons</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<script src="assets/javascript/jquery-2.2.1.min.js"></script>
-		<script src="assets/javascript/ajax.js"></script>
-				<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-		
-		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-		<!--[if lt IE 9]>
-			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
-			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-		<![endif]-->
-		<link rel="stylesheet" type="text/css" href="assets/style/reset.css">
-		<link rel="stylesheet" type="text/css" href="assets/style/style.css">
+<html>
+<head>
+	<title>Animals</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="assets/style/reset.css">
+<link rel="stylesheet" href="assets/style/style.css">
+</head>
 
-	</head>
-	<body>
-	<div class="panel panel-default text-center">
-		<div class="panel-body">
-		<h1 class="text-center">Giphy API</h1>
+<body>
+
+<div class="container pull-right">
+<div class = "btn-toolbar">
+  <div id="animalsView">
+ </div>
+  </div>
+<br><br><br><br><br><br>
+  <form class = "pull-right" id="animal-form">
+    <label form="animal-input">Add a animal</label> <br>
+    <input type="text" id="animal-input"><br>
+   
+    <input id="addanimal" class = "btn btn-primary" type="submit" value="Add a animal">
+  </form>
+<div class="container">
+    <p class id = 'rating'>
+	<p class id = 'searchResult'> 
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+
+//==================================================
+//variables=========================================
+
+	var animals = [];
+	var gKey = "&api_key=dc6zaTOxFJmzC"
+	var gLimit = '&limit=10';
+	var giphyURL = "http://api.giphy.com/v1/gifs/search?q=";
+	var newanimal;
 	
 
+//==================================================
+//functions=========================================	
+
+//add buttons
+$('#addanimal').on('click', function(){
+
+		var newanimal = $('#animal-input').val().trim();
+		
+
+		// Creating a button and putting into a variable
+		var a = $('<button>')
+
+		// Giving attributes to the button created
+	    a.addClass('animal btn btn-primary');
+	    a.attr('data-name', newanimal);
+	    a.attr('id', 'animalbutton');
+	    a.text(newanimal);
+
+	    // Changing the html adding the button	 
+
+	    $('#animalsView').append(a);
+	    		//------ 
+		 //$('#animal-input').val('');  
+		return false; 
+});
+
+
+// do ajax call and add images
+
+var displayGifs = function(){
+	var giphyanimal = $(this).attr('data-name');
+	var giphySearch = giphyURL + giphyanimal + gKey + gLimit;
+	console.log(giphyanimal);
+	$.get( giphySearch, function( response ) { 
+  		
+  		var arrayOfTenImages = response.data;
+  		
+
+		for(var i = 0; i<arrayOfTenImages.length; i++) {
+  		var stillImageURL = arrayOfTenImages[i].images.fixed_height_still.url;
+  		var movingImageURL = arrayOfTenImages[i].images.fixed_height_downsampled.url;
+
+  		var rating = arrayOfTenImages[i].rating;
+
+  		var imageHTML = "<div class = \"container\"> <img src = \"" + stillImageURL +  "\" data-animate = \"" + movingImageURL + "\" data-still = \"" + stillImageURL + "\" data-state =\"still\" > </div>";
+
+		console.log(imageHTML);
+  
+   $('#searchResult').prepend(' Rating:' +  rating + imageHTML );
+   			}
+		})
+
+	};
+
+	//clicking on images toggles between animation and still image
+	var toggleAnimation = function(){ 
+	        var state = $(this).attr('data-state'); 
+
+            if ( state == 'still'){
+                $(this).attr('src', $(this).data('animate'));
+                $(this).attr('data-state', 'animate');
+            }else{
+                $(this).attr('src', $(this).data('still'));
+                $(this).attr('data-state', 'still');
+            }
+     };
 
 
 
- 		<script src="assets/javascript/ajax.js"></script>
-	</body>
+//==================================================
+//main process=========================================
+$(document).on('click', 'img', toggleAnimation);
+$(document).on('click', '#animalbutton', displayGifs);
+
+</script>
+
+
+</body>
 </html>
