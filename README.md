@@ -1,4 +1,4 @@
-# week-6-ajax-apis
+#AJAX / APIs
 
 buttons get created by filling in form
 
